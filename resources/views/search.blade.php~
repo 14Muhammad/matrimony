@@ -1,0 +1,67 @@
+@extends('layouts.master')
+
+@section('content')
+<div class="container">
+<div class="row">
+
+@foreach($users as $user)
+<div class="container col s4">
+<div class="card small col s12">
+    <div class="card-image waves-effect waves-block waves-light">
+    <br>
+      @if($user->profile_pic!=null)
+        <img class=" col s12  m8" data-caption="{{$user->slug}}" src="{{asset('/uploads/images/'.$user->profile_pic->first()->name.'.'.$user->profile_pic->first()->extension) }}">
+    @else
+    @if($user->gender=="male")
+        <img class=" col s12 m8" data-caption="{{$user->slug}}" src="{{asset('/uploads/images/male.jpg') }}">
+    @else
+        <img class=" col s12 m8" data-caption="{{$user->slug}}" src="{{asset('/uploads/images/female.jpg') }}">
+    @endif
+    @endif
+    </div>
+    
+    @if(Auth::check())
+    @if(\App\Friends::AreFriends(Auth::user()->id,$user->id)->first()==null)
+    <div class="card-content">
+    <span class="card-title grey-text text-darken-4"><h6>{{ $user->rand_name }}</h6></span>      
+      
+    </div>
+    <div class="card-action">
+        <a class="btn red sendrequest" id="{{$user->slug}}" data-value="{{$user->slug}}"><i class="fa fa-sign-out"></i>Send Request</a></div>
+        <div class="card-reveal">
+    <span class="card-title grey-text text-darken-4">{{ $user->name }}<i class="fa fa-times" style="float: right;"></i></span>      
+    <p>Here is some more information about this person that is only revealed once clicked on.</p>
+    </div>
+    @else
+    <div class="card-content">
+    <span class="card-title grey-text text-darken-4"><h6>{{ $user->name }}</h6></span>      
+      
+    </div>
+    <div class="card-action">
+         <a class="btn red" id="{{$user->slug}}" data-value="{{$user->slug}}" href="{{url('/viewprofile/'.$user->slug)}}">View Profile</a></div>
+    <div class="card-reveal">
+    <span class="card-title grey-text text-darken-4">{{ $user->rand_name }}<i class="fa fa-times" style="float: right;"></i></span>      
+    <p>Here is some more information about this person that is only revealed once clicked on.</p>
+    </div>
+    @endif
+    @else
+    <div class="card-content">
+    <span class="card-title grey-text text-darken-4"><h6>{{ $user->rand_name }}</h6></span>      
+      
+    </div>
+    <div class="card-action">
+        <a class="btn red sendrequest" id="{{$user->slug}}" data-value="{{$user->slug}}"><i class="fa fa-sign-out"></i>Send Request</a></div>
+        <div class="card-reveal">
+    <span class="card-title grey-text text-darken-4">{{ $user->rand_name }}<i class="fa fa-times" style="float: right;"></i></span>      
+    <p>Here is some more information about this person that is only revealed once clicked on.</p>
+    </div>
+    @endif  
+    
+    
+  </div>
+</div>
+
+@endforeach
+</div>
+</div>
+@stop
